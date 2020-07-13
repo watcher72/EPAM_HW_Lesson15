@@ -17,6 +17,11 @@ running = False
 
 
 def traffic_info(interval=60):
+    """
+    Collect the information about internet traffic.
+
+    :param interval: interval of sending information to the server
+    """
     global running
     running = True
     start_time = time.time()
@@ -50,6 +55,7 @@ def traffic_info(interval=60):
 
 
 def graceful_teardown():
+    """Stop collect the infornation and close connection with server."""
     answer = input('Do you really want to finish collect traffic information? [Y/N]')
     if answer in ['Y', 'y']:
         global running
@@ -58,5 +64,6 @@ def graceful_teardown():
 
 if __name__ == '__main__':
     keyboard.add_hotkey('Ctrl + Q', graceful_teardown)
-    print('Start collecting traffic information')
+    print('Start collecting traffic information\n'
+          'For cancel press Ctrl+Q')
     traffic_info(5)

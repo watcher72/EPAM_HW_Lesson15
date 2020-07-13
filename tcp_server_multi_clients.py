@@ -4,6 +4,7 @@ and save it in the file 'data.txt'.
 """
 import socket
 import time
+from multiprocessing.pool import ThreadPool
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -13,6 +14,8 @@ sock.listen(2)
 
 
 output_file = 'data.txt'
+
+pool = ThreadPool(4)
 
 
 def handle_client(cl):
@@ -31,4 +34,4 @@ if __name__ == '__main__':
     print(f'\nServer start working: {start_time}')
     while True:
         client, addr = sock.accept()
-        handle_client(client)
+        pool.apply_async(handle_client, (client,))
