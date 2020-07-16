@@ -22,10 +22,12 @@ ms = mouse.Controller()
 
 def mouse_activity_info(interval=60):
     """
-    Collect the information about moviments of mouse.
+    Collect the information about movements of mouse.
 
-    :param interval: interval of sending information to the server
+    :param interval: interval (in seconds) of sending
+                     information to the server
     """
+
     global mouse_left_clicks
     global running
     running = True
@@ -68,16 +70,16 @@ def on_click(x, y, button, pressed):
 
 
 def graceful_teardown():
-    """Stop collect the infornation and close connection with server."""
-    answer = input('Do you really want to finish collect traffic information? [Y/N]')
+    """Stop collect the information and close connection with server."""
+    global running
+    answer = input('Do you really want stop running? [Y/N]')
     if answer in ['Y', 'y']:
-        global running
         running = False
 
 
 if __name__ == '__main__':
     keyboard.add_hotkey('Ctrl + X', graceful_teardown)
-    print('Start collecting traffic information\n'
+    print('Start collecting mouses activity information\n'
           'For stop program press Ctrl+X')
 
     listener = mouse.Listener(on_click=on_click)

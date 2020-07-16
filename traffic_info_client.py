@@ -20,25 +20,28 @@ def traffic_info(interval=60):
     """
     Collect the information about internet traffic.
 
-    :param interval: interval of sending information to the server
+    :param interval: interval (in seconds) of sending
+                     information to the server
     """
+
     global running
     running = True
     start_time = time.time()
     while running:
-        start_recv_bytes = psutil.net_io_counters(pernic=False).bytes_recv
+        prev_recv_bytes = psutil.net_io_counters(pernic=False).bytes_recv
         start_sent_bytes = psutil.net_io_counters(pernic=False).bytes_sent
 
         while time.time() - start_time < interval and running:
-            # Здесь можно собирать, например, температуру, суммировать значения
-            # и считать количество замеров
+            # Здесь можно собирать, например, температуру,
+            # суммировать значения и считать количество замеров
             time.sleep(1)
-        # А здесь посчитать среднее арифметичесое температуры за 1 минуту
         if not running:
             sock.close()
             break
+
+        # А здесь посчитать среднее арифметичесое температуры за 1 минуту
         recv_bytes = (psutil.net_io_counters(pernic=False).bytes_recv
-                            - start_recv_bytes)
+                            - prev_recv_bytes)
         send_bytes = (psutil.net_io_counters(pernic=False).bytes_sent
                             - start_sent_bytes)
         cur_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
@@ -55,8 +58,8 @@ def traffic_info(interval=60):
 
 
 def graceful_teardown():
-    """Stop collect the infornation and close connection with server."""
-    answer = input('Do you really want to finish collect traffic information? [Y/N]')
+    """Stop collect the information and close connection with server."""
+    answer = input('Do you really want stop running? [Y/N]')
     if answer in ['Y', 'y']:
         global running
         running = False
