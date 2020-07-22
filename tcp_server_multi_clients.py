@@ -4,7 +4,9 @@ and save it in the file 'data.txt'.
 """
 import socket
 import time
+
 from multiprocessing.pool import ThreadPool
+from threading import Lock
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -16,6 +18,7 @@ sock.listen(2)
 output_file = 'data.txt'
 
 pool = ThreadPool(4)
+file_lock = Lock()
 
 
 def handle_client(cl):
@@ -23,9 +26,10 @@ def handle_client(cl):
         data = cl.recv(1024).decode('utf-8')
         if not data:
             break
-        with open(output_file, 'a') as f:
-            f.writelines(data)
-            print(data)
+        with file_lock:
+            with open(output_file, 'a') as f:
+                f.writelines(data)
+                print(data)
     cl.close()
 
 

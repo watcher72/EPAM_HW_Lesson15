@@ -10,12 +10,9 @@ import time
 from pynput import mouse
 
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect(('localhost', 9090))
-
 running = False
 mouse_left_clicks = 0
-mouse_usage = 0
+# mouse_usage = 0
 
 ms = mouse.Controller()
 
@@ -45,21 +42,22 @@ def mouse_activity_info(interval=60):
                 prev_pos = cur_position
 
         if not running:
-            sock.close()
             break
         left_clicks = mouse_left_clicks - prev_left_clicks
         mouse_usage = mouse_usage / interval * 100
         cur_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
         message_left_clicks = f'{cur_time} - Left clicks: {left_clicks}\n'
         message_mouse_usage = f'{cur_time} - Mouse usage: {mouse_usage:.2f} %\n'
+
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect(('localhost', 9090))
         # print(f'Send: {message_left_clicks}')
         sock.send(message_left_clicks.encode('utf-8'))
         # print(f'Send: {message_mouse_usage}')
         sock.send(message_mouse_usage.encode('utf-8'))
+        sock.close()
 
         start_time += interval
-
-    sock.close()
 
 
 def on_click(x, y, button, pressed):
@@ -87,4 +85,3 @@ if __name__ == '__main__':
     listener.start()
 
     mouse_activity_info(10)
-

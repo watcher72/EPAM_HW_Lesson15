@@ -12,10 +12,11 @@ class MetricCollector(ABC):
         self.value = 0
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._running = False
+        self.interval = 60
 
     def start_collect(self, host, port, interval=60):
-        self.interval = interval
         self.sock.connect((host, port))
+        self.interval = interval
         self.start_time = time.time()
         self._running = True
         self.loop()
