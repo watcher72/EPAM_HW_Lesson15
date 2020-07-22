@@ -41,13 +41,12 @@ def traffic_info(interval=60):
         message_recv_bytes = f'{cur_time} - Bytes received: {recv_bytes}\n'
         message_sent_bytes = f'{cur_time} - Bytes sent: {send_bytes}\n'
 
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect(('localhost', 9090))
-        # print(f'Send: {message_recv_bytes}')
-        sock.send(message_recv_bytes.encode('utf-8'))
-        # print(f'Send: {message_sent_bytes}')
-        sock.send(message_sent_bytes.encode('utf-8'))
-        sock.close()
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.connect(('localhost', 9090))
+            # print(f'Send: {message_recv_bytes}')
+            sock.send(message_recv_bytes.encode('utf-8'))
+            # print(f'Send: {message_sent_bytes}')
+            sock.send(message_sent_bytes.encode('utf-8'))
 
         start_time += interval
 

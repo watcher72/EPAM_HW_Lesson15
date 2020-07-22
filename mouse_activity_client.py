@@ -49,13 +49,12 @@ def mouse_activity_info(interval=60):
         message_left_clicks = f'{cur_time} - Left clicks: {left_clicks}\n'
         message_mouse_usage = f'{cur_time} - Mouse usage: {mouse_usage:.2f} %\n'
 
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect(('localhost', 9090))
-        # print(f'Send: {message_left_clicks}')
-        sock.send(message_left_clicks.encode('utf-8'))
-        # print(f'Send: {message_mouse_usage}')
-        sock.send(message_mouse_usage.encode('utf-8'))
-        sock.close()
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.connect(('localhost', 9090))
+            # print(f'Send: {message_left_clicks}')
+            sock.send(message_left_clicks.encode('utf-8'))
+            # print(f'Send: {message_mouse_usage}')
+            sock.send(message_mouse_usage.encode('utf-8'))
 
         start_time += interval
 
